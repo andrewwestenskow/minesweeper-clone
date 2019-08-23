@@ -1,6 +1,8 @@
+let game = []
+
 const newGame = () => {
+  game = []
   let id = 0
-  const game = []
   const playArea = document.getElementById('play-area')
   playArea.innerHTML = ''
   playArea.classList = ''
@@ -15,11 +17,9 @@ const newGame = () => {
       id++
     }
 
-    let mines = getMines(10, game.length)
+    getMines(10, game.length)
 
-    mines.forEach(element => {
-      game[element].innerHTML = `<img class='mine' src='./Assets/mine.ico' />`
-    })
+    
 
     game.forEach(element => {
       playArea.append(element)
@@ -34,11 +34,9 @@ const newGame = () => {
       id++
     }
 
-    let mines = getMines(40, game.length)
+    getMines(40, game.length)
 
-    mines.forEach(element => {
-      game[element].innerHTML = `<img class='mine' src='./Assets/mine.ico' />`
-    })
+    
 
     game.forEach(element => {
       playArea.append(element)
@@ -53,11 +51,9 @@ const newGame = () => {
       id++
     }
 
-    let mines = getMines(99, game.length)
+    getMines(99, game.length)
 
-    mines.forEach(element => {
-      game[element].innerHTML = `<img class='mine' src='./Assets/mine.ico' />`
-    })
+    
 
     game.forEach(element => {
       playArea.append(element)
@@ -68,7 +64,7 @@ const newGame = () => {
 const getMines = (numMines, length) => {
   const minesIndex = []
   while (numMines > 0) {
-    let newMine = Math.floor(Math.random() * length - 1)
+    let newMine = Math.floor(Math.random() * length)
     let index = minesIndex.findIndex(element => element === newMine)
     if (index === -1) {
       minesIndex.push(newMine)
@@ -76,7 +72,19 @@ const getMines = (numMines, length) => {
     }
   }
 
+  minesIndex.forEach(element => {
+    let square = game[element]
+    square.addEventListener('click', () => lose())
+    square.innerHTML = `<img class='mine' src='./Assets/mine.ico' />`
+  })
+
   return minesIndex
+}
+
+const lose = () => {
+  alert('lose')
+  game = []
+  newGame()
 }
 
 
