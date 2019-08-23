@@ -59,7 +59,15 @@
   height: 20px;
   width: 20px;
   background: #bdbdbd;
-  border: 1px solid #b4b4b4
+  box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-square:active{
+  box-shadow: none;
+  border: 1px solid black;
 }
 
 .mine{
