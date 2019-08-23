@@ -33,6 +33,9 @@
 
 .game-head{
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
 }
 
 #play-area{
@@ -44,9 +47,21 @@
   width: 180px
 }
 
+.medium{
+  width: 320px
+}
+
+.hard{
+  width: 600px;
+}
+
 .game-square{
   height: 20px;
   width: 20px;
   background: #bdbdbd;
   border: 1px solid #b4b4b4
+}
+
+.mine{
+  height: 15px;
 }
