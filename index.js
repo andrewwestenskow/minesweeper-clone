@@ -72,7 +72,7 @@ const getMines = (numMines, length) => {
     let square = game[element]
     square.addEventListener('click', lose)
     square.classList.add('mine-square')
-    square.innerHTML = `<img class='mine' src='./Assets/mine.ico' />`
+    // square.innerHTML = `<img class='mine' src='./Assets/mine.ico' />`
   })
 
   return minesIndex
@@ -82,27 +82,43 @@ const click = (id, callingSquare) => {
   console.log(`ID: ${id}`)
   let num = 0
   let square = document.getElementById(id)
+  square.classList.add('clicked')
   let squareChecks = []
-  if(difficulty.value === 'easy'){
+  const corners = []
+  if (difficulty.value === 'easy') {
     squareChecks.push(game[id - 1], game[id + 1], game[id - 9], game[id + 9])
+    corners.push(game[id - 10], game[id - 8], game[id + 8], game[id + 10])
   }
-  if(difficulty.value === 'medium'){
+  if (difficulty.value === 'medium') {
     squareChecks.push(game[id - 1], game[id + 1], game[id - 16], game[id + 16])
+    corners.push(game[id - 17], game[id - 15], game[id + 15], game[id + 17])
   }
-  if(difficulty.value === 'hard'){
+  if (difficulty.value === 'hard') {
     squareChecks.push(game[id - 1], game[id + 1], game[id - 30], game[id + 30])
+    corners.push(game[id - 31], game[id -29], game[id + 29], game[id + 31])
   }
 
+  corners.forEach(element => {
+    element.classList.add('corner')
+  })
+
   squareChecks.forEach(element => {
-    if(element && element.classList.contains('mine-square')){
+    if (element && element.classList.contains('mine-square')) {
       num++
-    } else if (!callingSquare) {
+    }
+  })
+
+  squareChecks.forEach(element => {
+    if (num === 0 && element && !element.classList.contains('clicked')) {
       click(+element.id, +id)
     }
   })
 
-  square.innerText = num  
-} 
+  if (num !== 0) {
+    square.innerText = num
+  }
+  return num
+}
 
 const lose = () => {
   alert('lose')

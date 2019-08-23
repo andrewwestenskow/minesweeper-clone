@@ -77,3 +77,13 @@
 .flag{
   height: 15px;
 }
+
+.clicked{
+  box-shadow: none;
+  background: gray;
+  border: 1px solid black;
+}
+
+.corner{
+  background: yellow
+}
