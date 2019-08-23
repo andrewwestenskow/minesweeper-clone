@@ -1,11 +1,11 @@
 let game = []
+const difficulty = document.querySelector('select')
 
 const newGame = () => {
   game = []
   const playArea = document.getElementById('play-area')
   playArea.innerHTML = ''
   playArea.classList = ''
-  const difficulty = document.querySelector('select')
   if (difficulty.value === 'easy') {
     playArea.classList.add('easy')
     getSquares(81)
@@ -22,8 +22,6 @@ const newGame = () => {
     getSquares(256)
 
     getMines(40, game.length)
-
-
 
     game.forEach(element => {
       playArea.append(element)
@@ -51,6 +49,9 @@ const getSquares = (count) => {
       newSquare.removeEventListener('click', lose)
       newSquare.innerHTML = `<img class='flag' src='./Assets/flag.png' />`
     })
+    newSquare.addEventListener('click', (e) => {
+      click(+e.srcElement.id)
+    })
     game.push(newSquare)
     id++
   }
@@ -76,6 +77,32 @@ const getMines = (numMines, length) => {
 
   return minesIndex
 }
+
+const click = (id, callingSquare) => {
+  console.log(`ID: ${id}`)
+  let num = 0
+  let square = document.getElementById(id)
+  let squareChecks = []
+  if(difficulty.value === 'easy'){
+    squareChecks.push(game[id - 1], game[id + 1], game[id - 9], game[id + 9])
+  }
+  if(difficulty.value === 'medium'){
+    squareChecks.push(game[id - 1], game[id + 1], game[id - 16], game[id + 16])
+  }
+  if(difficulty.value === 'hard'){
+    squareChecks.push(game[id - 1], game[id + 1], game[id - 30], game[id + 30])
+  }
+
+  squareChecks.forEach(element => {
+    if(element && element.classList.contains('mine-square')){
+      num++
+    } else if (!callingSquare) {
+      click(+element.id, +id)
+    }
+  })
+
+  square.innerText = num  
+} 
 
 const lose = () => {
   alert('lose')
