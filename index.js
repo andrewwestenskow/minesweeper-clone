@@ -99,7 +99,9 @@ const click = (id, callingSquare) => {
   }
 
   corners.forEach(element => {
-    element.classList.add('corner')
+    if(element.classList.contains('mine-square')){
+      num++
+    }
   })
 
   squareChecks.forEach(element => {
@@ -128,3 +130,8 @@ const lose = () => {
 
 
 newGame()
+
+
+
+
+
