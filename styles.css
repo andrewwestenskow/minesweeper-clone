@@ -80,10 +80,14 @@
 
 .clicked{
   box-shadow: none;
-  background: gray;
+  background: '#c0c0c0';
   border: 1px solid black;
 }
 
 .corner{
   background: yellow
+}
+
+.mine-lose{
+  background: red
 }

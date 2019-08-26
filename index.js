@@ -1,10 +1,20 @@
 let game = []
 const difficulty = document.querySelector('select')
 const remaining = document.querySelector('.mines-count-hold')
+const timer = document.querySelector('.timer-hold')
 let mines = null
+let time = 000
+
+timer.innerText = time
+
+setInterval(() => {
+  time++
+  timer.innerText = time
+}, 1000);
 
 const newGame = () => {
   game = []
+  time = 000
   const playArea = document.getElementById('play-area')
   playArea.innerHTML = ''
   playArea.classList = ''
@@ -52,31 +62,34 @@ const getSquares = (count) => {
     let newSquare = document.createElement('div')
     newSquare.classList.add('game-square')
     newSquare.id = id
-    newSquare.innerText = id
-    newSquare.addEventListener('auxclick', (e) => {
-      mines--
-      remaining.innerText = mines
-      newSquare.classList.add('flag-square')
-      newSquare.removeEventListener('click', lose)
-      newSquare.innerHTML = `<img class='flag' src='./Assets/flag.png' />`
-      if (mines === 0) {
-        let mineSquares = document.getElementsByClassName('mine-square')
-        let flagSquares = document.getElementsByClassName('flag-square')
-        for (let i = 0; i < mineSquares.length; i++) {
-          if (+mineSquares[i].id !== +flagSquares[i].id) {
-            alert('Wrong')
-            break
-          }
-        }
-        alert('You win')
-      }
-    })
-    newSquare.addEventListener('click', (e) => {
-      click(+e.srcElement.id)
-    })
+    newSquare.addEventListener('auxclick', rightClick)
+    newSquare.addEventListener('click', leftClick)
     game.push(newSquare)
     id++
   }
+}
+
+const leftClick = (e) => {
+  click(+e.srcElement.id)
+}
+
+const rightClick = (e) => {
+  const square = document.getElementById(+e.target.parentElement.id)
+  mines--
+  remaining.innerText = mines
+  square.classList.add('flag-square')
+  square.removeEventListener('click', lose)
+  square.removeEventListener('click', leftClick)
+  square.innerHTML = `<img class='flag' src='./Assets/flag.png' />`
+  if(mines === 0){
+    checkWin()
+  }
+}
+
+const checkWin = () => {
+  const mines = document.getElementsByClassName('mine-square')
+  const flags = document.getElementsByClassName('flag-square')
+  console.log(mines === flags)
 }
 
 const getMines = (numMines, length) => {
@@ -101,11 +114,15 @@ const getMines = (numMines, length) => {
 }
 
 const click = (id, callingSquare) => {
-  // console.log(`ID: ${id}`)
   let num = 0
-  let square = document.getElementById(id)
+  let square = document.getElementById(+id)
   let checks
   square.classList.add('clicked')
+
+  if (square.classList.contains('mine-square')) {
+    lose()
+    return
+  }
 
   switch (difficulty.value) {
     case 'easy':
@@ -116,8 +133,9 @@ const click = (id, callingSquare) => {
       break
     case 'hard':
       checks = getChecks('hard', id)
+      break
     default:
-      return 'error'
+      return console.log('error')
   }
 
   checks.corners.forEach(element => {
@@ -132,15 +150,43 @@ const click = (id, callingSquare) => {
     }
   })
 
-  // checks.squareChecks.forEach(element => {
-  //   if (num === 0 && element && !element.classList.contains('clicked')) {
-  //     click(+element.id, +id)
-  //   }
-  // })
+  checks.squareChecks.forEach(element => {
+    if (num === 0 && element && !element.classList.contains('clicked')) {
+      click(+element.id, +id)
+    }
+  })
 
-  // if (num !== 0) {
-  //   square.innerText = num
-  // }
+  if (num !== 0) {
+    square.innerText = num
+    switch(num){
+      case 1: 
+      square.style.color = '#0000ff'
+      break;
+      case 2: 
+      square.style.color = '#007b00'
+      break
+      case 3: 
+      square.style.color = '#ff0000'
+      break
+      case 4: 
+      square.style.color = '#00007b'
+      break
+      case 5: 
+      square.style.color = '#800000'
+      break
+      case 6 : 
+      square.style.color = '#007b7b'
+      break
+      case 7: 
+      square.style.color = '#000000'
+      break
+      case 8:
+      square.style.color = '#7b7b7b'
+      break
+      default: 
+      square.style.color = 'c0c0c0'
+    }
+  }
   return num
 }
 
@@ -232,11 +278,6 @@ const getChecks = (difficulty, id) => {
             corners.push(game[id - 17], game[id - 15], game[id + 15], game[id + 17])
           }
       }
-      break;
-
-      //DEFAULT
-      // squareChecks.push(game[id - 1], game[id + 1], game[id - 30], game[id + 30])
-      // corners.push(game[id - 31], game[id - 29], game[id + 29], game[id + 31])
       break
     case 'hard':
       const hardLeft = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450]
@@ -263,29 +304,26 @@ const getChecks = (difficulty, id) => {
           break;
         default:
           if (hardLeft.includes(+id)) {
-            squareChecks.push(game[id + 1], game[id - 16], game[id + 16])
-            corners.push(game[+id - 15], game[+id + 17])
+            squareChecks.push(game[id + 1], game[id - 30], game[id + 30])
+            corners.push(game[+id - 29], game[+id + 31])
           } else if (hardRight.includes(+id)) {
-            squareChecks.push(game[id - 1], game[id - 16], game[id + 16])
-            corners.push(game[+id - 17], game[+id + 15])
+            squareChecks.push(game[id - 1], game[id - 30], game[id + 30])
+            corners.push(game[+id - 31], game[+id + 29])
           } else if (hardTop.includes(+id)) {
-            squareChecks.push(game[+id - 1], game[+id + 1], game[+id + 16])
-            corners.push(game[+id + 17], game[+id + 15])
+            squareChecks.push(game[+id - 1], game[+id + 1], game[+id + 30])
+            corners.push(game[+id + 29], game[+id + 31])
           } else if (hardBottom.includes(+id)) {
-            squareChecks.push(game[+id - 1], game[+id + 1], game[+id - 16])
-            corners.push(game[+id - 17], game[+id - 15])
+            squareChecks.push(game[+id - 1], game[+id + 1], game[+id - 30])
+            corners.push(game[+id - 29], game[+id - 31])
           } else {
-            squareChecks.push(game[id - 1], game[id + 1], game[id - 16], game[id + 16])
-            corners.push(game[id - 17], game[id - 15], game[id + 15], game[id + 17])
+            squareChecks.push(game[id - 1], game[id + 1], game[id - 30], game[id + 30])
+            corners.push(game[id - 31], game[id - 29], game[id + 29], game[id + 31])
           }
       }
-
       break
     default:
-      return 'error'
+      console.log('error')
   }
-
-  console.log(corners)
 
   return {
     squareChecks,
@@ -294,9 +332,11 @@ const getChecks = (difficulty, id) => {
 }
 
 const lose = () => {
-  alert('lose')
-  game = []
-  newGame()
+  let mineSquares = document.getElementsByClassName('mine-square')
+  for (let i = 0; i < mineSquares.length; i++) {
+    mineSquares[i].innerHTML = `<img class='mine' src='./Assets/mine.ico' />`
+    mineSquares[i].classList.add('mine-lose')
+  }
 }
 
 
