@@ -241,6 +241,45 @@ const getChecks = (difficulty, id) => {
     case 'hard':
       const hardLeft = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450]
       const hardRight = [29, 59, 89, 119, 149, 179, 209, 239, 269, 299, 329, 359, 389, 419, 449, 479]
+      const hardTop = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]
+      const hardBottom = [451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478]
+
+      switch (+id) {
+        case 0:
+          corners.push(game[31])
+          squareChecks.push(game[1], game[30])
+          break;
+        case 450:
+          corners.push(game[421])
+          squareChecks.push(game[420], game[451])
+          break;
+        case 29:
+          corners.push(game[58])
+          squareChecks.push(game[28], game[59])
+          break;
+        case 479:
+          corners.push(game[448])
+          squareChecks.push(game[449], game[478])
+          break;
+        default:
+          if (hardLeft.includes(+id)) {
+            squareChecks.push(game[id + 1], game[id - 16], game[id + 16])
+            corners.push(game[+id - 15], game[+id + 17])
+          } else if (hardRight.includes(+id)) {
+            squareChecks.push(game[id - 1], game[id - 16], game[id + 16])
+            corners.push(game[+id - 17], game[+id + 15])
+          } else if (hardTop.includes(+id)) {
+            squareChecks.push(game[+id - 1], game[+id + 1], game[+id + 16])
+            corners.push(game[+id + 17], game[+id + 15])
+          } else if (hardBottom.includes(+id)) {
+            squareChecks.push(game[+id - 1], game[+id + 1], game[+id - 16])
+            corners.push(game[+id - 17], game[+id - 15])
+          } else {
+            squareChecks.push(game[id - 1], game[id + 1], game[id - 16], game[id + 16])
+            corners.push(game[id - 17], game[id - 15], game[id + 15], game[id + 17])
+          }
+      }
+
       break
     default:
       return 'error'
