@@ -104,139 +104,163 @@ const click = (id, callingSquare) => {
   // console.log(`ID: ${id}`)
   let num = 0
   let square = document.getElementById(id)
+  let checks
   square.classList.add('clicked')
-  if (difficulty.value === 'easy') {
 
-    //DECIDES WHICH SQUARES TO LOOK AT ON EASY
+  switch (difficulty.value) {
+    case 'easy':
+      checks = getChecks('easy', id)
+      break;
+    case 'medium':
+      checks = getChecks('medium', id)
+      break
+    case 'hard':
+      checks = getChecks('hard', id)
+    default:
+      return 'error'
+  }
 
-    let checks = getChecks('easy', id)
-
-    //DECIDES WHICH SQUARES TO LOOK AT ON MEDIUM
-
-    if (difficulty.value === 'medium') {
-      const mediumLeft = [0, 16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240]
-      const mediumRight = [15, 31, 47, 63, 79, 95, 111, 127, 143, 159, 175, 191, 207, 223, 239, 255]
-      if (mediumLeft.includes(+id)) {
-        squareChecks.push(game[id + 1], game[id - 16], game[id + 16])
-        corners.push(game[id + 15], game[id + 17])
-      } else if (mediumRight.includes(+id)) {
-        squareChecks.push(game[id - 1], game[id - 16], game[id + 16])
-        corners.push(game[id + 15], game[id + 17])
-      } else {
-        squareChecks.push(game[id - 1], game[id + 1], game[id - 16], game[id + 16])
-        corners.push(game[id - 17], game[id - 15], game[id + 15], game[id + 17])
-      }
+  checks.corners.forEach(element => {
+    if (element && element.classList.contains('mine-square')) {
+      num++
     }
+  })
 
-    //DECIDES WHICH SQUARES TO LOOK AT ON HARD
+  checks.squareChecks.forEach(element => {
+    if (element && element.classList.contains('mine-square')) {
+      num++
+    }
+  })
 
-    if (difficulty.value === 'hard') {
+  // checks.squareChecks.forEach(element => {
+  //   if (num === 0 && element && !element.classList.contains('clicked')) {
+  //     click(+element.id, +id)
+  //   }
+  // })
+
+  // if (num !== 0) {
+  //   square.innerText = num
+  // }
+  return num
+}
+
+
+const getChecks = (difficulty, id) => {
+  let squareChecks = []
+  const corners = []
+  switch (difficulty) {
+    case 'easy':
+      const easyLeft = [9, 18, 27, 36, 45, 54, 63]
+      const easyRight = [17, 26, 35, 44, 53, 62, 71]
+      const easyTop = [1, 2, 3, 4, 5, 6, 7]
+      const easyBottom = [73, 74, 75, 76, 77, 78, 79]
+
+      switch (+id) {
+        case 0:
+          corners.push(game[10])
+          squareChecks.push(game[1], game[9])
+          break;
+        case 72:
+          corners.push(game[64])
+          squareChecks.push(game[63], game[73])
+          break;
+        case 8:
+          corners.push(game[16])
+          squareChecks.push(game[7], game[17])
+          break;
+        case 80:
+          corners.push(game[70])
+          squareChecks.push(game[71], game[79])
+          break;
+        default:
+          if (easyLeft.includes(+id)) {
+            squareChecks.push(game[id + 1], game[id - 9], game[id + 9])
+            corners.push(game[+id - 8], game[+id + 10])
+          } else if (easyRight.includes(+id)) {
+            squareChecks.push(game[id - 1], game[id - 9], game[id + 9])
+            corners.push(game[+id - 10], game[+id + 8])
+          } else if (easyTop.includes(+id)) {
+            squareChecks.push(game[+id - 1], game[+id + 1], game[+id + 9])
+            corners.push(game[+id + 8], game[+id + 10])
+          } else if (easyBottom.includes(+id)) {
+            squareChecks.push(game[+id - 1], game[+id + 1], game[+id - 9])
+            corners.push(game[+id - 10], game[+id - 8])
+          } else {
+            squareChecks.push(game[id - 1], game[id + 1], game[id - 9], game[id + 9])
+            corners.push(game[id - 10], game[id - 8], game[id + 8], game[id + 10])
+          }
+      }
+      break;
+    case 'medium':
+      const mediumLeft = [16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224]
+      const mediumRight = [31, 47, 63, 79, 95, 111, 127, 143, 159, 175, 191, 207, 223, 239]
+      const mediumTop = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+      const mediumBottom = [241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254]
+
+      switch (+id) {
+        case 0:
+          corners.push(game[17])
+          squareChecks.push(game[1], game[16])
+          break;
+        case 240:
+          corners.push(game[225])
+          squareChecks.push(game[224], game[241])
+          break;
+        case 15:
+          corners.push(game[30])
+          squareChecks.push(game[14], game[31])
+          break;
+        case 255:
+          corners.push(game[238])
+          squareChecks.push(game[239], game[254])
+          break;
+        default:
+          if (mediumLeft.includes(+id)) {
+            squareChecks.push(game[id + 1], game[id - 16], game[id + 16])
+            corners.push(game[+id - 15], game[+id + 17])
+          } else if (mediumRight.includes(+id)) {
+            squareChecks.push(game[id - 1], game[id - 16], game[id + 16])
+            corners.push(game[+id - 17], game[+id + 15])
+          } else if (mediumTop.includes(+id)) {
+            squareChecks.push(game[+id - 1], game[+id + 1], game[+id + 16])
+            corners.push(game[+id + 17], game[+id + 15])
+          } else if (mediumBottom.includes(+id)) {
+            squareChecks.push(game[+id - 1], game[+id + 1], game[+id - 16])
+            corners.push(game[+id - 17], game[+id - 15])
+          } else {
+            squareChecks.push(game[id - 1], game[id + 1], game[id - 16], game[id + 16])
+            corners.push(game[id - 17], game[id - 15], game[id + 15], game[id + 17])
+          }
+      }
+      break;
+
+      //DEFAULT
+      // squareChecks.push(game[id - 1], game[id + 1], game[id - 30], game[id + 30])
+      // corners.push(game[id - 31], game[id - 29], game[id + 29], game[id + 31])
+      break
+    case 'hard':
       const hardLeft = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450]
       const hardRight = [29, 59, 89, 119, 149, 179, 209, 239, 269, 299, 329, 359, 389, 419, 449, 479]
-      if (hardLeft.includes(+id)) {
-        squareChecks.push(game[id + 1], game[id - 30], game[id + 30])
-        corners.push(game[id + 29], game[id + 31])
-      } else if (hardRight.includes(+id)) {
-        squareChecks.push(game[id - 1], game[id - 30], game[id + 30])
-        corners.push(game[id - 31], game[id - 29])
-      } else {
-        squareChecks.push(game[id - 1], game[id + 1], game[id - 30], game[id + 30])
-        corners.push(game[id - 31], game[id - 29], game[id + 29], game[id + 31])
-      }
-    }
+      break
+    default:
+      return 'error'
+  }
 
-    checks.corners.forEach(element => {
-      if (element && element.classList.contains('mine-square')) {
-        num++
-      }
-    })
+  console.log(corners)
 
-    checks.squareChecks.forEach(element => {
-      if (element && element.classList.contains('mine-square')) {
-        num++
-      }
-    })
-
-    // checks.squareChecks.forEach(element => {
-    //   if (num === 0 && element && !element.classList.contains('clicked')) {
-    //     click(+element.id, +id)
-    //   }
-    // })
-
-    // if (num !== 0) {
-    //   square.innerText = num
-    // }
-    return num
+  return {
+    squareChecks,
+    corners
   }
 }
 
-  const getChecks = (difficulty, id) => {
-    let squareChecks = []
-    const corners = []
-    switch (difficulty) {
-      case 'easy':
-        const easyLeft = [9, 18, 27, 36, 45, 54, 63]
-        const easyRight = [17, 26, 35, 44, 53, 62, 71]
-        const easyTop = [1, 2, 3, 4, 5, 6, 7]
-        const easyBottom = [73, 74, 75, 76, 77, 78, 79]
-
-        switch (+id) {
-          case 0:
-            corners.push(game[10])
-            squareChecks.push(game[1], game[9])
-            break;
-          case 72:
-            corners.push(game[64])
-            squareChecks.push(game[63], game[73])
-            break;
-          case 8:
-            corners.push(game[16])
-            squareChecks.push(game[7], game[17])
-            break;
-          case 80:
-            corners.push(game[70])
-            squareChecks.push(game[71], game[79])
-            break;
-          default:
-            if (easyLeft.includes(+id)) {
-              squareChecks.push(game[id + 1], game[id - 9], game[id + 9])
-              corners.push(game[+id - 8], game[+id + 10])
-            } else if (easyRight.includes(+id)) {
-              squareChecks.push(game[id - 1], game[id - 9], game[id + 9])
-              corners.push(game[+id - 10], game[+id + 8])
-            } else if(easyTop.includes(+id)){
-              squareChecks.push(game[+id - 1], game[+id + 1], game[+id + 9])
-              corners.push(game[+id + 8], game[+id + 10])
-            } else if(easyBottom.includes(+id)){
-              squareChecks.push(game[+id -1], game[+id + 1], game[+id - 9])
-              corners.push(game[+id - 10], game[+id - 8])
-            } else {
-              squareChecks.push(game[id - 1], game[id + 1], game[id - 9], game[id + 9])
-              corners.push(game[id - 10], game[id - 8], game[id + 8], game[id + 10])
-            }
-        }
-        break;
-      case 'medium':
-        break
-      case 'hard':
-        break
-      default:
-        return 'error'
-    }
-
-    return {
-      squareChecks,
-      corners
-    }
-  }
-
-  const lose = () => {
-    alert('lose')
-    game = []
-    newGame()
-  }
-
-
+const lose = () => {
+  alert('lose')
+  game = []
   newGame()
+}
+
+
+newGame()
 
 
