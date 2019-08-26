@@ -200,16 +200,21 @@ const click = (id, callingSquare) => {
           default:
             if (easyLeft.includes(+id)) {
               squareChecks.push(game[id + 1], game[id - 9], game[id + 9])
-
+              corners.push(game[+id - 8], game[+id + 10])
             } else if (easyRight.includes(+id)) {
               squareChecks.push(game[id - 1], game[id - 9], game[id + 9])
-
+              corners.push(game[+id - 10], game[+id + 8])
+            } else if(easyTop.includes(+id)){
+              squareChecks.push(game[+id - 1], game[+id + 1], game[+id + 9])
+              corners.push(game[+id + 8], game[+id + 10])
+            } else if(easyBottom.includes(+id)){
+              squareChecks.push(game[+id -1], game[+id + 1], game[+id - 9])
+              corners.push(game[+id - 10], game[+id - 8])
             } else {
               squareChecks.push(game[id - 1], game[id + 1], game[id - 9], game[id + 9])
               corners.push(game[id - 10], game[id - 8], game[id + 8], game[id + 10])
             }
         }
-        console.log(corners)
         break;
       case 'medium':
         break
