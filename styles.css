@@ -55,6 +55,10 @@
   font-size: 1.2rem;
 }
 
+.reset-button{
+  padding: 10px
+}
+
 #play-area{
   display: flex;
   flex-wrap: wrap;
