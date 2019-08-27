@@ -70,17 +70,13 @@
   border: 2px solid black;
 }
 
-.mine{
-  height: 15px;
-}
-
-.flag{
+.icon{
   height: 15px;
 }
 
 .clicked{
   box-shadow: none;
-  background: '#c0c0c0';
+  background: #999999;
   border: 1px solid black;
 }
 

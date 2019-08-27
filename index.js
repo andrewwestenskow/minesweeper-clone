@@ -7,7 +7,7 @@ let time = 000
 
 timer.innerText = time
 
-setInterval(() => {
+let timerId = setInterval(() => {
   time++
   timer.innerText = time
 }, 1000);
@@ -74,24 +74,66 @@ const leftClick = (e) => {
 }
 
 const rightClick = (e) => {
-  const square = document.getElementById(+e.target.parentElement.id)
+  const square = document.getElementById(+e.target.id)
   mines--
   remaining.innerText = mines
   square.classList.add('flag-square')
   square.removeEventListener('click', lose)
   square.removeEventListener('click', leftClick)
-  square.innerHTML = `<img class='flag' src='./Assets/flag.png' />`
+  square.removeEventListener('auxclick', rightClick)
+  square.addEventListener('auxclick', questionMark)
+  square.innerHTML = `<img class='icon' src='./Assets/flag.png' />`
   if(mines === 0){
     checkWin()
   }
 }
 
-const checkWin = () => {
-  const mines = document.getElementsByClassName('mine-square')
-  const flags = document.getElementsByClassName('flag-square')
-  console.log(mines === flags)
+const questionMark = (e) => {
+  const square = document.getElementById(+e.target.parentElement.id)
+  square.innerHTML = `<img class='icon' src='./Assets/question.png' />`
+  square.removeEventListener('auxclick', questionMark)
+  square.addEventListener('auxclick', remove)
+  mines ++
+  remaining.innerText = mines
+  
 }
 
+const remove = (e) => {
+  const square = document.getElementById(+e.target.parentElement.id)
+  square.addEventListener('click', leftClick)
+  square.addEventListener('auxclick', rightClick)
+  square.innerHTML = ''
+  if(square.classList.contains('mine-square')){
+    square.addEventListener('click', lose)
+  }
+}
+
+const checkWin = () => {
+  let minesIds = []
+  let flagsIds = []
+  const mines = document.getElementsByClassName('mine-square')
+  const flags = document.getElementsByClassName('flag-square')
+  for(let i = 0; i < flags.length; i++){
+    minesIds.push(+mines[i].id)
+    flagsIds.push(+flags[i].id)
+  }
+
+  let winCon = true
+
+  minesIds.sort()
+  flagsIds.sort()
+  minesIds.forEach((element, index) => {
+    if (element !== flagsIds[index]){
+      winCon = false
+    }
+  })
+
+  if(winCon){
+    fireworks()
+  } else {
+    alert('You got some wrong')
+  }
+}
 const getMines = (numMines, length) => {
   const minesIndex = []
   while (numMines > 0) {
@@ -107,7 +149,7 @@ const getMines = (numMines, length) => {
     let square = game[element]
     square.addEventListener('click', lose)
     square.classList.add('mine-square')
-    square.innerHTML = `<img class='mine' src='./Assets/mine.ico' />`
+    // square.innerHTML = `<img class='icon' src='./Assets/mine.ico' />`
   })
 
   return minesIndex
@@ -334,7 +376,7 @@ const getChecks = (difficulty, id) => {
 const lose = () => {
   let mineSquares = document.getElementsByClassName('mine-square')
   for (let i = 0; i < mineSquares.length; i++) {
-    mineSquares[i].innerHTML = `<img class='mine' src='./Assets/mine.ico' />`
+    mineSquares[i].innerHTML = `<img class='icon' src='./Assets/mine.ico' />`
     mineSquares[i].classList.add('mine-lose')
   }
 }
