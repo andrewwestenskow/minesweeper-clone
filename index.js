@@ -442,7 +442,11 @@ const fireworks = () => {
       spark.style.background = `rgb(${color1}, ${color2}, ${color3})`
       spark.style.transform = `rotate(${angle}deg)`
       spark.style.left = `${startingLocation - 5}px`
+      spark.addEventListener('animationend', (e)=>{
+        e.target.remove()
+      })
       screen.appendChild(spark)
+
       angle += 15
     }
   })

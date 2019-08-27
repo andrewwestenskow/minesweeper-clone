@@ -114,6 +114,18 @@
   }
 }
 
+@keyframes growOut {
+  0%{
+    height: 1%;
+  }
+  75%{
+    height: 15%;
+  }
+  100%{
+    opacity: 0;
+  }
+}
+
 .firework-trail{
   position: absolute;
   height: 15%;
@@ -127,4 +139,5 @@
   height: 10%;
   width: 2px;
   bottom: 75%;
+  animation: growOut 750ms;
 }
