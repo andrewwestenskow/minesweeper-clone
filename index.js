@@ -83,7 +83,7 @@ const rightClick = (e) => {
   square.removeEventListener('auxclick', rightClick)
   square.addEventListener('auxclick', questionMark)
   square.innerHTML = `<img class='icon' src='./Assets/flag.png' />`
-  if(mines === 0){
+  if (mines === 0) {
     checkWin()
   }
 }
@@ -93,9 +93,9 @@ const questionMark = (e) => {
   square.innerHTML = `<img class='icon' src='./Assets/question.png' />`
   square.removeEventListener('auxclick', questionMark)
   square.addEventListener('auxclick', remove)
-  mines ++
+  mines++
   remaining.innerText = mines
-  
+
 }
 
 const remove = (e) => {
@@ -103,7 +103,7 @@ const remove = (e) => {
   square.addEventListener('click', leftClick)
   square.addEventListener('auxclick', rightClick)
   square.innerHTML = ''
-  if(square.classList.contains('mine-square')){
+  if (square.classList.contains('mine-square')) {
     square.addEventListener('click', lose)
   }
 }
@@ -113,7 +113,7 @@ const checkWin = () => {
   let flagsIds = []
   const mines = document.getElementsByClassName('mine-square')
   const flags = document.getElementsByClassName('flag-square')
-  for(let i = 0; i < flags.length; i++){
+  for (let i = 0; i < flags.length; i++) {
     minesIds.push(+mines[i].id)
     flagsIds.push(+flags[i].id)
   }
@@ -123,17 +123,18 @@ const checkWin = () => {
   minesIds.sort()
   flagsIds.sort()
   minesIds.forEach((element, index) => {
-    if (element !== flagsIds[index]){
+    if (element !== flagsIds[index]) {
       winCon = false
     }
   })
 
-  if(winCon){
+  if (winCon) {
     fireworks()
   } else {
     alert('You got some wrong')
   }
 }
+
 const getMines = (numMines, length) => {
   const minesIndex = []
   while (numMines > 0) {
@@ -200,33 +201,33 @@ const click = (id, callingSquare) => {
 
   if (num !== 0) {
     square.innerText = num
-    switch(num){
-      case 1: 
-      square.style.color = '#0000ff'
-      break;
-      case 2: 
-      square.style.color = '#007b00'
-      break
-      case 3: 
-      square.style.color = '#ff0000'
-      break
-      case 4: 
-      square.style.color = '#00007b'
-      break
-      case 5: 
-      square.style.color = '#800000'
-      break
-      case 6 : 
-      square.style.color = '#007b7b'
-      break
-      case 7: 
-      square.style.color = '#000000'
-      break
+    switch (num) {
+      case 1:
+        square.style.color = '#0000ff'
+        break;
+      case 2:
+        square.style.color = '#007b00'
+        break
+      case 3:
+        square.style.color = '#ff0000'
+        break
+      case 4:
+        square.style.color = '#00007b'
+        break
+      case 5:
+        square.style.color = '#800000'
+        break
+      case 6:
+        square.style.color = '#007b7b'
+        break
+      case 7:
+        square.style.color = '#000000'
+        break
       case 8:
-      square.style.color = '#7b7b7b'
-      break
-      default: 
-      square.style.color = 'c0c0c0'
+        square.style.color = '#7b7b7b'
+        break
+      default:
+        square.style.color = 'c0c0c0'
     }
   }
   return num
@@ -379,6 +380,33 @@ const lose = () => {
     mineSquares[i].innerHTML = `<img class='icon' src='./Assets/mine.ico' />`
     mineSquares[i].classList.add('mine-lose')
   }
+}
+
+const fireworks = () => {
+  const screen = document.querySelector('.holder')
+  let startingLocation = Math.floor(Math.random() * window.innerWidth)
+  let color1 = Math.floor(Math.random() * 255)
+  let color2 = Math.floor(Math.random() * 255)
+  let color3 = Math.floor(Math.random() * 255)
+  let trail = document.createElement('div')
+  trail.classList.add('firework-trail')
+  trail.style.background = `rgb(${color1}, ${color2}, ${color3})`
+  trail.style.left = `${startingLocation - 5}px`
+  trail.addEventListener('animationend', (e)=>{
+    console.log(e)
+    e.target.remove()
+    let angle = 0
+    for(let i = 0; i < 12; i++){
+      let spark = document.createElement('div')
+      spark.classList.add('spark')
+      spark.style.background = `rgb(${color1}, ${color2}, ${color3})`
+      spark.style.transform = `rotate(${angle}deg)`
+      spark.style.left = `${startingLocation - 5}px`
+      screen.appendChild(spark)
+      angle += 15
+    }
+  })
+  screen.appendChild(trail)
 }
 
 

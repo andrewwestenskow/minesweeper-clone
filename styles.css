@@ -6,6 +6,9 @@
 .holder{
   height: 100vh;
   width: 100vw;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .header{
@@ -86,4 +89,28 @@
 
 .mine-lose{
   background: red
+}
+
+@keyframes moveUp {
+  0%{
+    bottom: 0
+  }
+  100%{
+    bottom: 60%
+  }
+}
+
+.firework-trail{
+  position: absolute;
+  height: 15%;
+  width: 2px;
+  bottom: 0;
+  animation: moveUp 750ms linear;
+}
+
+.spark{
+  position: absolute;
+  height: 10%;
+  width: 2px;
+  bottom: 75%;
 }
