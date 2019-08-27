@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+
 *{
   margin: 0;
   box-sizing: border-box
@@ -39,6 +41,22 @@
   justify-content: space-between;
   align-items: center;
   height: 50px;
+  padding: 0 15px;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+  color: red;
+}
+
+.mines-count-hold{
+  background: black;
+  padding: 5px;
+  display: flex;
+}
+
+.timer-hold{
+  display: flex;
+  background: black;
+  padding: 5px;
 }
 
 #play-area{

@@ -1,26 +1,43 @@
 let game = []
 const difficulty = document.querySelector('select')
-const remaining = document.querySelector('.mines-count-hold')
-const timer = document.querySelector('.timer-hold')
-let mines = null
-let time = 000
-
-timer.innerText = time
-
-let timerId = setInterval(() => {
-  time++
-  timer.innerText = time
-}, 1000);
+const timerHundreds = document.querySelector('.timer-hundreds')
+const timerTens = document.querySelector('.timer-tens')
+const timerOnes = document.querySelector('.timer-ones')
+let mines
+let hundreds = 0
+let tens = 0
+let ones = 0
+const minesHundreds = document.querySelector('.mines-hundreds')
+const minesTens = document.querySelector('.mines-tens')
+const minesOnes = document.querySelector('.mines-ones')
+let mHundreds = 0
+let mTens = 0
+let mOnes = 0
+let fireworksId
+let timerId
 
 const newGame = () => {
+  clearInterval(fireworksId)
+  clearInterval(timerId)
+  timerId = undefined
   game = []
-  time = 000
+  hundreds = 0
+  tens = 0
+  ones = 0
+  timerHundreds.innerText = 0
+  timerTens.innerText = 0
+  timerOnes.innerText = 0
   const playArea = document.getElementById('play-area')
   playArea.innerHTML = ''
   playArea.classList = ''
   if (difficulty.value === 'easy') {
     mines = 10
-    remaining.innerText = mines
+    mHundreds = 0
+    mTens = 1
+    mOnes = 0
+    minesHundreds.innerText = 0
+    minesTens.innerText = 1
+    minesOnes.innerText = 0
     playArea.classList.add('easy')
     getSquares(81)
 
@@ -33,7 +50,12 @@ const newGame = () => {
     })
   } else if (difficulty.value === 'medium') {
     mines = 40
-    remaining.innerText = mines
+    mHundreds = 0
+    mTens = 4
+    mOnes = 0
+    minesHundreds.innerText = 0
+    minesTens.innerText = 4
+    minesOnes.innerText = 0
     playArea.classList.add('medium')
     getSquares(256)
 
@@ -44,7 +66,12 @@ const newGame = () => {
     })
   } else if (difficulty.value === 'hard') {
     mines = 99
-    remaining.innerText = mines
+    mHundreds = 0
+    mTens = 9
+    mOnes = 9
+    minesHundreds.innerText = 0
+    minesTens.innerText = 9
+    minesOnes.innerText = 9
     playArea.classList.add('hard')
     getSquares(480)
 
@@ -75,17 +102,13 @@ const leftClick = (e) => {
 
 const rightClick = (e) => {
   const square = document.getElementById(+e.target.id)
-  mines--
-  remaining.innerText = mines
+  minesDown()
   square.classList.add('flag-square')
   square.removeEventListener('click', lose)
   square.removeEventListener('click', leftClick)
   square.removeEventListener('auxclick', rightClick)
   square.addEventListener('auxclick', questionMark)
   square.innerHTML = `<img class='icon' src='./Assets/flag.png' />`
-  if (mines === 0) {
-    checkWin()
-  }
 }
 
 const questionMark = (e) => {
@@ -93,15 +116,14 @@ const questionMark = (e) => {
   square.innerHTML = `<img class='icon' src='./Assets/question.png' />`
   square.removeEventListener('auxclick', questionMark)
   square.addEventListener('auxclick', remove)
-  mines++
-  remaining.innerText = mines
-
+  minesUp()
 }
 
 const remove = (e) => {
   const square = document.getElementById(+e.target.parentElement.id)
   square.addEventListener('click', leftClick)
   square.addEventListener('auxclick', rightClick)
+  square.removeEventListener('auxclick', remove)
   square.innerHTML = ''
   if (square.classList.contains('mine-square')) {
     square.addEventListener('click', lose)
@@ -129,7 +151,20 @@ const checkWin = () => {
   })
 
   if (winCon) {
-    fireworks()
+    const squares = document.getElementsByClassName('game-square')
+    for (let i = 0; i < squares.length; i++) {
+      let square = squares[i]
+      square.removeEventListener('click', leftClick)
+      square.removeEventListener('click', lose)
+      square.removeEventListener('auxclick', rightClick)
+      square.removeEventListener('auxclick', questionMark)
+      square.removeEventListener('auxclick', remove)
+    }
+    clearInterval(timerId)
+    fireworksId = setInterval(() => {
+      fireworks()
+    }, 100);
+
   } else {
     alert('You got some wrong')
   }
@@ -157,6 +192,11 @@ const getMines = (numMines, length) => {
 }
 
 const click = (id, callingSquare) => {
+  if (!timerId) {
+    timerId = setInterval(() => {
+      timer()
+    }, 1000);
+  }
   let num = 0
   let square = document.getElementById(+id)
   let checks
@@ -375,6 +415,7 @@ const getChecks = (difficulty, id) => {
 }
 
 const lose = () => {
+  clearInterval(timerId)
   let mineSquares = document.getElementsByClassName('mine-square')
   for (let i = 0; i < mineSquares.length; i++) {
     mineSquares[i].innerHTML = `<img class='icon' src='./Assets/mine.ico' />`
@@ -392,11 +433,10 @@ const fireworks = () => {
   trail.classList.add('firework-trail')
   trail.style.background = `rgb(${color1}, ${color2}, ${color3})`
   trail.style.left = `${startingLocation - 5}px`
-  trail.addEventListener('animationend', (e)=>{
-    console.log(e)
+  trail.addEventListener('animationend', (e) => {
     e.target.remove()
     let angle = 0
-    for(let i = 0; i < 12; i++){
+    for (let i = 0; i < 12; i++) {
       let spark = document.createElement('div')
       spark.classList.add('spark')
       spark.style.background = `rgb(${color1}, ${color2}, ${color3})`
@@ -407,6 +447,54 @@ const fireworks = () => {
     }
   })
   screen.appendChild(trail)
+}
+
+const timer = () => {
+  ones++
+  if (ones === 10) {
+    tens++
+    ones = 0
+    if (tens === 10) {
+      hundreds++
+      tens = 0
+    }
+  }
+  timerHundreds.innerText = hundreds
+  timerTens.innerText = tens
+  timerOnes.innerText = ones
+}
+
+const minesDown = () => {
+  mOnes--
+  if (mOnes === -1) {
+    mTens--
+    mOnes = 9
+    if (mTens === -1) {
+      mHundreds--
+      mTens = 9
+    }
+  }
+  minesHundreds.innerText = mHundreds
+  minesTens.innerText = mTens
+  minesOnes.innerText = mOnes
+  if(mOnes === 0 && mTens === 0 && mHundreds === 0){
+    checkWin()
+  }
+}
+
+const minesUp = () => {
+  mOnes++
+  if (mOnes === 10) {
+    mTens++
+    mOnes = 0
+    if (mTens === 10) {
+      mHundreds++
+      mTens = 0
+    }
+  }
+  minesHundreds.innerText = mHundreds
+  minesTens.innerText = mTens
+  minesOnes.innerText = mOnes
 }
 
 

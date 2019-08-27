@@ -23,15 +23,23 @@
     <div class="game-hold">
       <div class="game">
         <div class="game-head">
-          <div class="mines-count-hold"></div>
+          <div class="mines-count-hold">
+            <div class="mines-hundreds">0</div>
+            <div class="mines-tens">0</div>
+            <div class="mines-ones">0</div>
+          </div>
           <button onclick='newGame()' class="reset-button">:)</button>
-          <div class="timer-hold">000</div>
+          <div class="timer-hold">
+            <div class="timer-hundreds">0</div>
+            <div class="timer-tens">0</div>
+            <div class="timer-ones">0</div>
+          </div>
         </div>
         <div id='play-area' oncontextmenu="return false">
 
         </div>
       </div>
-      <button onclick='fireworks()'>Fireworks</button>
+      <!-- <button onclick='fireworks()'>Fireworks</button> -->
     </div>
   </div>
 </body>
