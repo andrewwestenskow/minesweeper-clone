@@ -351,13 +351,13 @@ const getChecks = (difficulty, id) => {
 
 const rightClick = (e) => {
   const square = document.getElementById(+e.target.id)
-  minesDown()
   square.classList.add('flag-square')
   square.removeEventListener('click', lose)
   square.removeEventListener('click', leftClick)
   square.removeEventListener('auxclick', rightClick)
   square.addEventListener('auxclick', questionMark)
   square.innerHTML = `<img class='icon' src='./Assets/flag.png' />`
+  minesDown()
 }
 
 const questionMark = (e) => {
@@ -390,6 +390,8 @@ const checkWin = () => {
   }
 
   let winCon = true
+  console.log(minesIds)
+  console.log(flagsIds)
 
   minesIds.sort()
   flagsIds.sort()
@@ -416,6 +418,16 @@ const checkWin = () => {
 
   } else {
     alert('You got some wrong')
+    const squares = document.getElementsByClassName('game-square')
+    for (let i = 0; i < squares.length; i++) {
+      let square = squares[i]
+      square.removeEventListener('click', leftClick)
+      square.removeEventListener('click', lose)
+      square.removeEventListener('auxclick', rightClick)
+      square.removeEventListener('auxclick', questionMark)
+      square.removeEventListener('auxclick', remove)
+    }
+    clearInterval(timerId)
   }
 }
 
@@ -428,6 +440,16 @@ const lose = () => {
     mineSquares[i].innerHTML = `<img class='icon' src='./Assets/mine.ico' />`
     mineSquares[i].classList.add('mine-lose')
   }
+  const squares = document.getElementsByClassName('game-square')
+    for (let i = 0; i < squares.length; i++) {
+      let square = squares[i]
+      square.removeEventListener('click', leftClick)
+      square.removeEventListener('click', lose)
+      square.removeEventListener('auxclick', rightClick)
+      square.removeEventListener('auxclick', questionMark)
+      square.removeEventListener('auxclick', remove)
+    }
+    clearInterval(timerId)
 }
 
 const fireworks = () => {

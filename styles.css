@@ -28,8 +28,9 @@
   background: darkslategray;
   padding-top: 15px;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;;
+  justify-content: flex-start;
+  flex-direction: column;  
 }
 
 .game{
@@ -168,4 +169,9 @@
   .mobile-warning{
     display: block;
   }
+}
+
+.instructions{
+  margin-top: 50px;
+  color:#bdbdbd
 }
