@@ -145,3 +145,27 @@
   bottom: 75%;
   animation: growOut 750ms;
 }
+
+.mobile-warning{
+  background: #bdbdbd;
+  min-width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: none;
+  text-align: center;
+  font-size: 3rem;
+  position: fixed;
+  top: 0;
+}
+
+@media screen and (max-width: 1050px) {
+  .game-hold{
+    display: none;
+  }
+  .mobile-warning{
+    display: block;
+  }
+}
